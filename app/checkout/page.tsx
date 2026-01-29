@@ -1,14 +1,21 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useCart } from '@/context/CartContext'
-import { ArrowLeft, Shield, CreditCard, Truck } from 'lucide-react'
+import { ArrowLeft, Shield, CreditCard, Truck, CheckCircle, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { OrderManager } from '@/lib/orders'
+import { useRouter } from 'next/navigation'
 
 export default function CheckoutPage() {
   const { items, totalPrice, clearCart } = useCart()
   const [step, setStep] = useState(1)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [orderSuccess, setOrderSuccess] = useState(false)
+  const [orderId, setOrderId] = useState<string>('')
+  const [cryptoAddress, setCryptoAddress] = useState<string>('')
+  const router = useRouter()
   
   const [formData, setFormData] = useState({
     name: '',
@@ -21,16 +28,157 @@ export default function CheckoutPage() {
     paymentMethod: 'wallet'
   })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Автозаполнение для теста
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !formData.name) {
+      setFormData({
+        name: 'Иван Иванов',
+        email: 'test@example.com',
+        phone: '+79991234567',
+        address: 'ул. Примерная, д. 123',
+        city: 'Москва',
+        postalCode: '123456',
+        deliveryMethod: 'courier',
+        paymentMethod: 'crypto'
+      })
+    }
+  }, [])
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
     if (step < 3) {
       setStep(step + 1)
-    } else {
-      // Здесь будет отправка заказа на сервер
-      alert('Заказ оформлен! Мы свяжемся с вами для подтверждения.')
-      clearCart()
-      // Перенаправление на главную
+      return
     }
+
+    setIsSubmitting(true)
+
+    try {
+      // Создаем заказ
+      const order = OrderManager.createOrder({
+        items: items.map(item => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity
+        })),
+        total: totalPrice + 19,
+        customerName: formData.name,
+        customerEmail: formData.email,
+        customerPhone: formData.phone,
+        shippingAddress: `${formData.city}, ${formData.address}`,
+        deliveryMethod: formData.deliveryMethod === 'courier' ? 'Курьер' : 
+                      formData.deliveryMethod === 'pickup' ? 'Самовывоз' : 'Почта России',
+        paymentMethod: formData.paymentMethod === 'wallet' ? 'Баланс кошелька' : 'Криптовалюта'
+      })
+
+      // Генерируем крипто-адрес для оплаты
+      if (formData.paymentMethod === 'crypto') {
+        const wallets = [
+          'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh',
+          '0x742d35Cc6634C0532925a3b844Bc9e0F1aB2B3c8'
+        ]
+        setCryptoAddress(wallets[Math.floor(Math.random() * wallets.length)])
+      }
+
+      setOrderId(order.id)
+      setOrderSuccess(true)
+      clearCart()
+
+      // Сохраняем заказ в localStorage для админ-панели
+      localStorage.setItem('last-order-id', order.id)
+
+    } catch (error) {
+      console.error('Ошибка при создании заказа:', error)
+      alert('Произошла ошибка. Пожалуйста, попробуйте снова.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  if (orderSuccess) {
+    return (
+      <div className="py-20">
+        <div className="container mx-auto px-4 max-w-2xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl p-8 shadow-lg text-center"
+          >
+            <div className="flex justify-center mb-6">
+              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
+                <CheckCircle className="w-12 h-12 text-green-600" />
+              </div>
+            </div>
+            
+            <h1 className="text-3xl font-bold mb-4">Заказ оформлен!</h1>
+            <p className="text-gray-600 mb-6">
+              Номер вашего заказа: <span className="font-bold">{orderId}</span>
+            </p>
+            
+            {formData.paymentMethod === 'crypto' ? (
+              <div className="mb-8">
+                <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 mb-6">
+                  <div className="flex items-center mb-4">
+                    <AlertCircle className="w-6 h-6 text-yellow-600 mr-2" />
+                    <h3 className="font-bold text-lg">Оплатите криптовалютой</h3>
+                  </div>
+                  
+                  <div className="space-y-4 text-left">
+                    <div>
+                      <p className="text-gray-600 mb-2">Адрес для оплаты (Bitcoin):</p>
+                      <div className="bg-gray-800 text-white p-4 rounded-lg font-mono text-sm break-all">
+                        {cryptoAddress}
+                      </div>
+                      <button
+                        onClick={() => navigator.clipboard.writeText(cryptoAddress)}
+                        className="mt-2 text-sm text-blue-600 hover:text-blue-800"
+                      >
+                        Скопировать адрес
+                      </button>
+                    </div>
+                    
+                    <div>
+                      <p className="text-gray-600 mb-2">Сумма к оплате:</p>
+                      <p className="text-2xl font-bold">${totalPrice + 19} USD</p>
+                      <p className="text-sm text-gray-500">
+                        ≈ {((totalPrice + 19) / 43000).toFixed(8)} BTC
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                <p className="text-gray-600 mb-6">
+                  После получения 2 подтверждений в сети мы отправим вам трек-номер для отслеживания.
+                </p>
+              </div>
+            ) : (
+              <div className="mb-8">
+                <p className="text-gray-600 mb-6">
+                  Спасибо за заказ! Мы свяжемся с вами в течение 30 минут для подтверждения.
+                </p>
+              </div>
+            )}
+            
+            <div className="space-y-4">
+              <Link
+                href="/"
+                className="inline-block w-full md:w-auto btn-primary"
+              >
+                Вернуться в магазин
+              </Link>
+              <button
+                onClick={() => window.print()}
+                className="inline-block w-full md:w-auto btn-secondary"
+              >
+                Распечатать квитанцию
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -38,7 +186,7 @@ export default function CheckoutPage() {
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Заголовок и шаги */}
         <div className="mb-12">
-          <Link href="/" className="inline-flex items-center text-apple-blue mb-6">
+          <Link href="/" className="inline-flex items-center text-apple-blue mb-6 hover:underline">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Вернуться к покупкам
           </Link>
@@ -217,12 +365,14 @@ export default function CheckoutPage() {
                     </label>
                   </div>
                   
-                  <div className="bg-blue-50 p-4 rounded-lg">
-                    <p className="text-sm text-blue-800">
-                      После оформления заказа мы отправим вам адрес для оплаты криптовалютой.
-                      Заказ будет обработан после 3 подтверждений в сети.
-                    </p>
-                  </div>
+                  {formData.paymentMethod === 'crypto' && (
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <p className="text-sm text-blue-800">
+                        После оформления заказа мы сгенерируем для вас уникальный адрес для оплаты криптовалютой.
+                        Заказ будет автоматически подтвержден после 2 подтверждений в сети.
+                      </p>
+                    </div>
+                  )}
                 </motion.div>
               )}
 
@@ -232,6 +382,7 @@ export default function CheckoutPage() {
                     type="button"
                     onClick={() => setStep(step - 1)}
                     className="btn-secondary"
+                    disabled={isSubmitting}
                   >
                     Назад
                   </button>
@@ -242,8 +393,9 @@ export default function CheckoutPage() {
                 <button
                   type="submit"
                   className="btn-primary"
+                  disabled={isSubmitting}
                 >
-                  {step < 3 ? 'Продолжить' : 'Оформить заказ'}
+                  {isSubmitting ? 'Обработка...' : step < 3 ? 'Продолжить' : 'Оформить заказ'}
                 </button>
               </div>
             </form>
@@ -254,7 +406,7 @@ export default function CheckoutPage() {
             <div className="bg-gray-50 rounded-xl p-6 sticky top-24">
               <h2 className="text-xl font-bold mb-6">Ваш заказ</h2>
               
-              <div className="space-y-4 mb-6">
+              <div className="space-y-4 mb-6 max-h-64 overflow-y-auto">
                 {items.map((item) => (
                   <div key={item.id} className="flex justify-between items-center">
                     <div>
@@ -262,7 +414,7 @@ export default function CheckoutPage() {
                       <div className="text-sm text-gray-500">Количество: {item.quantity}</div>
                     </div>
                     <div className="font-medium">
-                      ${item.price * item.quantity}
+                      ${(item.price * item.quantity).toFixed(2)}
                     </div>
                   </div>
                 ))}
@@ -270,16 +422,24 @@ export default function CheckoutPage() {
               
               <div className="border-t pt-4 space-y-3">
                 <div className="flex justify-between">
-                  <span>Товары</span>
-                  <span>${totalPrice}</span>
+                  <span>Товары ({items.reduce((sum, item) => sum + item.quantity, 0)} шт.)</span>
+                  <span>${totalPrice.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Доставка</span>
-                  <span>$19</span>
+                  <span>
+                    {formData.deliveryMethod === 'courier' ? '$19' : 
+                     formData.deliveryMethod === 'pickup' ? '$9' : '$15'}
+                  </span>
                 </div>
                 <div className="flex justify-between text-lg font-bold pt-3 border-t">
                   <span>Итого</span>
-                  <span>${totalPrice + 19}</span>
+                  <span>
+                    ${(totalPrice + (
+                      formData.deliveryMethod === 'courier' ? 19 : 
+                      formData.deliveryMethod === 'pickup' ? 9 : 15
+                    )).toFixed(2)}
+                  </span>
                 </div>
               </div>
               
