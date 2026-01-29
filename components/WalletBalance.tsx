@@ -1,6 +1,6 @@
 'use client'
 
-import { Wallet, Copy, Check, Plus, QrCode, ExternalLink } from 'lucide-react'
+import { Wallet, Copy, Check, Plus } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import QRCode from 'qrcode.react'
 
@@ -16,9 +16,7 @@ export default function WalletBalance() {
   const [balance, setBalance] = useState(0.00)
   const [copied, setCopied] = useState<string | null>(null)
   const [activeCrypto, setActiveCrypto] = useState('BTC')
-  const [showAllWallets, setShowAllWallets] = useState(false)
   
-  // Реальные кошельки
   const wallets: CryptoWallet[] = [
     { 
       symbol: 'BTC', 
@@ -50,7 +48,6 @@ export default function WalletBalance() {
     },
   ]
 
-  // Загружаем баланс из localStorage
   useEffect(() => {
     const savedBalance = localStorage.getItem('wallet-balance')
     if (savedBalance) {
@@ -58,7 +55,6 @@ export default function WalletBalance() {
     }
   }, [])
 
-  // Сохраняем баланс в localStorage
   useEffect(() => {
     localStorage.setItem('wallet-balance', balance.toString())
   }, [balance])
@@ -98,7 +94,6 @@ export default function WalletBalance() {
         </button>
       </div>
       
-      {/* Баланс */}
       <div className="mb-8">
         <p className="text-gray-400 mb-2">Баланс в долларах</p>
         <p className="text-4xl font-bold">${balance.toFixed(2)}</p>
@@ -107,7 +102,6 @@ export default function WalletBalance() {
         </p>
       </div>
       
-      {/* Выбор криптовалюты */}
       <div className="mb-6">
         <p className="text-gray-400 mb-3">Выберите криптовалюту для пополнения:</p>
         <div className="flex flex-wrap gap-2 mb-4">
@@ -127,7 +121,6 @@ export default function WalletBalance() {
         </div>
       </div>
       
-      {/* Адрес выбранной криптовалюты */}
       {activeWallet && (
         <div className="mb-6">
           <div className="flex items-center justify-between mb-3">
@@ -135,32 +128,28 @@ export default function WalletBalance() {
               <p className="text-gray-400">Адрес {activeWallet.name}</p>
               <p className="text-xs text-gray-500">{activeWallet.network}</p>
             </div>
-            <div className="flex space-x-2">
-              <button
-                onClick={() => copyAddress(activeWallet.address, activeWallet.symbol)}
-                className="flex items-center text-blue-400 hover:text-blue-300 text-sm"
-              >
-                {copied === activeWallet.symbol ? (
-                  <>
-                    <Check className="w-4 h-4 mr-1" />
-                    Скопировано
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4 mr-1" />
-                    Копировать
-                  </>
-                )}
-              </button>
-            </div>
+            <button
+              onClick={() => copyAddress(activeWallet.address, activeWallet.symbol)}
+              className="flex items-center text-blue-400 hover:text-blue-300 text-sm"
+            >
+              {copied === activeWallet.symbol ? (
+                <>
+                  <Check className="w-4 h-4 mr-1" />
+                  Скопировано
+                </>
+              ) : (
+                <>
+                  <Copy className="w-4 h-4 mr-1" />
+                  Копировать
+                </>
+              )}
+            </button>
           </div>
           
-          {/* Адрес */}
           <div className="bg-gray-800 rounded-lg p-4 mb-4">
             <code className="text-sm break-all">{activeWallet.address}</code>
           </div>
           
-          {/* QR код */}
           <div className="flex flex-col items-center mb-4">
             <div className="w-64 h-64 bg-white p-4 rounded-lg mb-3">
               <QRCode 
@@ -176,36 +165,9 @@ export default function WalletBalance() {
               Отсканируйте QR-код для оплаты
             </p>
           </div>
-          
-          {/* Быстрые ссылки для проверки */}
-          <div className="flex space-x-2">
-            {activeWallet.symbol === 'BTC' && (
-              <a 
-                href={`https://blockchair.com/bitcoin/address/${activeWallet.address}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 bg-gray-800 hover:bg-gray-700 rounded-lg p-3 text-center text-sm"
-              >
-                <ExternalLink className="w-4 h-4 inline mr-1" />
-                Проверить в Blockchair
-              </a>
-            )}
-            {activeWallet.symbol === 'ETH' && (
-              <a 
-                href={`https://etherscan.io/address/${activeWallet.address}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 bg-gray-800 hover:bg-gray-700 rounded-lg p-3 text-center text-sm"
-              >
-                <ExternalLink className="w-4 h-4 inline mr-1" />
-                Проверить в Etherscan
-              </a>
-            )}
-          </div>
         </div>
       )}
       
-      {/* Инструкция */}
       <div className="text-sm text-gray-400 border-t border-gray-800 pt-4">
         <p className="font-medium mb-2">📌 Важно:</p>
         <ul className="list-disc pl-5 space-y-1">
