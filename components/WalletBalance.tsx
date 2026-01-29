@@ -1,13 +1,15 @@
 'use client'
 
-import { Wallet, Copy, Check, Plus, QrCode } from 'lucide-react'
+import { Wallet, Copy, Check, Plus, QrCode, ExternalLink } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import QRCode from 'qrcode.react'
 
 interface CryptoWallet {
   symbol: string
   name: string
   address: string
   network: string
+  qrSize?: number
 }
 
 export default function WalletBalance() {
@@ -16,11 +18,36 @@ export default function WalletBalance() {
   const [activeCrypto, setActiveCrypto] = useState('BTC')
   const [showAllWallets, setShowAllWallets] = useState(false)
   
+  // Реальные кошельки
   const wallets: CryptoWallet[] = [
-    { symbol: 'BTC', name: 'Bitcoin', address: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh', network: 'Bitcoin Mainnet' },
-    { symbol: 'ETH', name: 'Ethereum', address: '0x742d35Cc6634C0532925a3b844Bc9e0F1aB2B3c8', network: 'Ethereum ERC20' },
-    { symbol: 'USDT', name: 'Tether', address: '0x742d35Cc6634C0532925a3b844Bc9e0F1aB2B3c8', network: 'ERC20' },
-    { symbol: 'TON', name: 'Toncoin', address: 'UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ', network: 'TON' },
+    { 
+      symbol: 'BTC', 
+      name: 'Bitcoin', 
+      address: 'bc1qlgf034j5nhqh0ltsqnhrepchlxwlykrtujvupq',
+      network: 'Bitcoin Mainnet',
+      qrSize: 180
+    },
+    { 
+      symbol: 'ETH', 
+      name: 'Ethereum', 
+      address: '0x5Fc25f19E18Dfc7d19595cB7d1eB0D0605b9A3FA',
+      network: 'Ethereum ERC20',
+      qrSize: 180
+    },
+    { 
+      symbol: 'USDT', 
+      name: 'Tether', 
+      address: 'TMM1xGXxAY9R66hGPxKNfxo81KrmdyrszE',
+      network: 'TRC20 (Tron)',
+      qrSize: 180
+    },
+    { 
+      symbol: 'TON', 
+      name: 'Toncoin', 
+      address: 'UQD-XSYf6P-NyjbSJYDHsgHnk0e5CiJQ2-NCZddro_5-c8B4',
+      network: 'TON',
+      qrSize: 180
+    },
   ]
 
   // Загружаем баланс из localStorage
@@ -76,7 +103,7 @@ export default function WalletBalance() {
         <p className="text-gray-400 mb-2">Баланс в долларах</p>
         <p className="text-4xl font-bold">${balance.toFixed(2)}</p>
         <p className="text-sm text-gray-400 mt-2">
-          ≈ {(balance / 43000).toFixed(6)} BTC • {(balance / 2300).toFixed(4)} ETH
+          Курсы обновляются автоматически
         </p>
       </div>
       
@@ -97,12 +124,6 @@ export default function WalletBalance() {
               {wallet.symbol}
             </button>
           ))}
-          <button
-            onClick={() => setShowAllWallets(!showAllWallets)}
-            className="px-4 py-2 rounded-full bg-gray-800 hover:bg-gray-700"
-          >
-            {showAllWallets ? 'Скрыть' : 'Еще...'}
-          </button>
         </div>
       </div>
       
@@ -114,51 +135,85 @@ export default function WalletBalance() {
               <p className="text-gray-400">Адрес {activeWallet.name}</p>
               <p className="text-xs text-gray-500">{activeWallet.network}</p>
             </div>
-            <button
-              onClick={() => copyAddress(activeWallet.address, activeWallet.symbol)}
-              className="flex items-center text-blue-400 hover:text-blue-300"
-            >
-              {copied === activeWallet.symbol ? (
-                <>
-                  <Check className="w-4 h-4 mr-1" />
-                  Скопировано
-                </>
-              ) : (
-                <>
-                  <Copy className="w-4 h-4 mr-1" />
-                  Копировать
-                </>
-              )}
-            </button>
+            <div className="flex space-x-2">
+              <button
+                onClick={() => copyAddress(activeWallet.address, activeWallet.symbol)}
+                className="flex items-center text-blue-400 hover:text-blue-300 text-sm"
+              >
+                {copied === activeWallet.symbol ? (
+                  <>
+                    <Check className="w-4 h-4 mr-1" />
+                    Скопировано
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4 mr-1" />
+                    Копировать
+                  </>
+                )}
+              </button>
+            </div>
           </div>
           
+          {/* Адрес */}
           <div className="bg-gray-800 rounded-lg p-4 mb-4">
             <code className="text-sm break-all">{activeWallet.address}</code>
           </div>
           
-          {/* QR код (заглушка) */}
-          <div className="flex justify-center mb-4">
-            <div className="w-48 h-48 bg-white p-4 rounded-lg">
-              <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center rounded">
-                <QrCode className="w-32 h-32 text-white" />
-              </div>
+          {/* QR код */}
+          <div className="flex flex-col items-center mb-4">
+            <div className="w-64 h-64 bg-white p-4 rounded-lg mb-3">
+              <QRCode 
+                value={activeWallet.address}
+                size={activeWallet.qrSize || 180}
+                level="H"
+                includeMargin={true}
+                fgColor="#000000"
+                bgColor="#FFFFFF"
+              />
             </div>
+            <p className="text-sm text-gray-400 text-center">
+              Отсканируйте QR-код для оплаты
+            </p>
+          </div>
+          
+          {/* Быстрые ссылки для проверки */}
+          <div className="flex space-x-2">
+            {activeWallet.symbol === 'BTC' && (
+              <a 
+                href={`https://blockchair.com/bitcoin/address/${activeWallet.address}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 bg-gray-800 hover:bg-gray-700 rounded-lg p-3 text-center text-sm"
+              >
+                <ExternalLink className="w-4 h-4 inline mr-1" />
+                Проверить в Blockchair
+              </a>
+            )}
+            {activeWallet.symbol === 'ETH' && (
+              <a 
+                href={`https://etherscan.io/address/${activeWallet.address}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 bg-gray-800 hover:bg-gray-700 rounded-lg p-3 text-center text-sm"
+              >
+                <ExternalLink className="w-4 h-4 inline mr-1" />
+                Проверить в Etherscan
+              </a>
+            )}
           </div>
         </div>
       )}
       
       {/* Инструкция */}
       <div className="text-sm text-gray-400 border-t border-gray-800 pt-4">
-        <p className="font-medium mb-2">Инструкция по пополнению:</p>
-        <ol className="list-decimal pl-5 space-y-1">
-          <li>Выберите криптовалюту выше</li>
-          <li>Отправьте средства на указанный адрес</li>
-          <li>После 2 подтверждений в сети баланс обновится</li>
-          <li>Оплачивайте заказы из корзины</li>
-        </ol>
-        <p className="mt-3 text-yellow-400">
-          ⚠️ В тестовом режиме баланс пополняется мгновенно
-        </p>
+        <p className="font-medium mb-2">📌 Важно:</p>
+        <ul className="list-disc pl-5 space-y-1">
+          <li>Отправляйте только {activeCrypto} на этот адрес</li>
+          <li>Минимальная сумма пополнения: $10</li>
+          <li>Баланс обновляется после 2 подтверждений</li>
+          <li>Для USDT используйте только сеть TRC20</li>
+        </ul>
       </div>
     </div>
   )
