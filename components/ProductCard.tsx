@@ -12,6 +12,7 @@ interface ProductCardProps {
   imageColor: string
   rating: number
   reviews: number
+  description?: string
 }
 
 export default function ProductCard({ 
@@ -21,7 +22,8 @@ export default function ProductCard({
   oldPrice, 
   imageColor, 
   rating, 
-  reviews 
+  reviews,
+  description 
 }: ProductCardProps) {
   
   const { addToCart } = useCart()
@@ -71,7 +73,7 @@ export default function ProductCard({
         </div>
 
         {/* Цены */}
-        <div className="mb-6">
+        <div className="mb-4">
           <div className="flex items-center">
             <span className="text-2xl font-bold">${price}</span>
             {oldPrice && (
@@ -79,6 +81,13 @@ export default function ProductCard({
             )}
           </div>
         </div>
+
+        {/* Описание */}
+        {description && (
+          <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+            {description}
+          </p>
+        )}
 
         {/* Кнопка */}
         <button 
