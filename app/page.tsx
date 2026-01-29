@@ -1,6 +1,7 @@
 import ProductCard from '@/components/ProductCard'
 import WalletBalance from '@/components/WalletBalance'
 import { Shield, Truck, Headphones, Bitcoin } from 'lucide-react'
+import CurrencyConverter from '@/components/CurrencyConverter'
 
 const products = [
   {
@@ -130,6 +131,62 @@ export default function Home() {
         </div>
       </section>
 
+// В секции после преимуществ добавляем:
+<section className="py-20 bg-gradient-to-b from-white to-apple-gray">
+  <div className="container mx-auto px-4">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <CurrencyConverter />
+      
+      {/* Инструкция */}
+      <div>
+        <h2 className="text-3xl font-bold mb-8">Как купить за 3 шага</h2>
+        
+        <div className="space-y-8">
+          <div className="flex items-start">
+            <div className="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+              <span className="text-apple-blue font-bold text-xl">1</span>
+            </div>
+            <div>
+              <h3 className="font-bold text-lg mb-2">Пополните баланс</h3>
+              <p className="text-gray-600">
+                Используйте конвертер справа для расчета суммы. 
+                Отправьте криптовалюту на адрес вашего кошелька в системе. 
+                Баланс обновится после 2 подтверждений в сети.
+              </p>
+            </div>
+          </div>
+          
+          <div className="flex items-start">
+            <div className="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+              <span className="text-apple-blue font-bold text-xl">2</span>
+            </div>
+            <div>
+              <h3 className="font-bold text-lg mb-2">Выберите товар</h3>
+              <p className="text-gray-600">
+                Добавьте iPhone в корзину, укажите адрес доставки 
+                и контактные данные.
+              </p>
+            </div>
+          </div>
+          
+          <div className="flex items-start">
+            <div className="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+              <span className="text-apple-blue font-bold text-xl">3</span>
+            </div>
+            <div>
+              <h3 className="font-bold text-lg mb-2">Оплатите заказ</h3>
+              <p className="text-gray-600">
+                Оплатите заказ с баланса кошелька. 
+                Мы отправим трек-номер для отслеживания сразу после оплаты.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+      
       {/* Популярные товары */}
       <section className="py-20">
         <div className="container mx-auto px-4">
