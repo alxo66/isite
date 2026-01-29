@@ -5,10 +5,12 @@ import { useState } from 'react'
 import Link from 'next/link'
 import CartModal from '@/components/CartModal'
 import { useCart } from '@/context/CartContext'
+import SearchModal from '@/components/SearchModal'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isCartOpen, setIsCartOpen] = useState(false)
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
   const { totalItems } = useCart()
 
   return (
@@ -17,10 +19,10 @@ export default function Header() {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             {/* Логотип */}
-            <div className="flex items-center space-x-2">
+            <Link href="/" className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg"></div>
               <span className="text-2xl font-bold">iPhone Store</span>
-            </div>
+            </Link>
 
             {/* Навигация для десктопа */}
             <nav className="hidden md:flex items-center space-x-8">
@@ -32,11 +34,20 @@ export default function Header() {
 
             {/* Иконки действий */}
             <div className="flex items-center space-x-6">
-              <button className="hidden md:block">
+              <button 
+                className="hidden md:block"
+                onClick={() => setIsSearchOpen(true)}
+              >
                 <Search className="w-5 h-5" />
               </button>
               
-              <button className="relative">
+              <button 
+                className="relative"
+                onClick={() => {
+                  // В будущем здесь будет личный кабинет
+                  window.open('https://t.me/iphone_store_support', '_blank')
+                }}
+              >
                 <User className="w-5 h-5" />
               </button>
               
@@ -65,10 +76,10 @@ export default function Header() {
           {isMenuOpen && (
             <div className="md:hidden py-4 border-t">
               <div className="flex flex-col space-y-4">
-                <Link href="/" className="font-medium py-2">Главная</Link>
-                <Link href="/catalog" className="font-medium py-2">Каталог</Link>
-                <Link href="/about" className="font-medium py-2">О нас</Link>
-                <Link href="/delivery" className="font-medium py-2">Доставка</Link>
+                <Link href="/" className="font-medium py-2" onClick={() => setIsMenuOpen(false)}>Главная</Link>
+                <Link href="/catalog" className="font-medium py-2" onClick={() => setIsMenuOpen(false)}>Каталог</Link>
+                <Link href="/about" className="font-medium py-2" onClick={() => setIsMenuOpen(false)}>О нас</Link>
+                <Link href="/delivery" className="font-medium py-2" onClick={() => setIsMenuOpen(false)}>Доставка</Link>
               </div>
             </div>
           )}
@@ -77,6 +88,9 @@ export default function Header() {
 
       {/* Модальное окно корзины */}
       <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      
+      {/* Модальное окно поиска */}
+      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </>
   )
 }
