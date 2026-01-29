@@ -2,6 +2,7 @@
 
 import { ShoppingCart, Star } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { useCart } from '@/context/CartContext'
 
 interface ProductCardProps {
   id: number
@@ -23,9 +24,15 @@ export default function ProductCard({
   reviews 
 }: ProductCardProps) {
   
-  const addToCart = () => {
-    alert(`Товар "${name}" добавлен в корзину!`)
-    // Здесь будет реальная логика добавления
+  const { addToCart } = useCart()
+
+  const handleAddToCart = () => {
+    addToCart({
+      id,
+      name,
+      price,
+      imageColor
+    })
   }
 
   return (
@@ -75,7 +82,7 @@ export default function ProductCard({
 
         {/* Кнопка */}
         <button 
-          onClick={addToCart}
+          onClick={handleAddToCart}
           className="w-full btn-primary flex items-center justify-center"
         >
           <ShoppingCart className="w-4 h-4 mr-2" />
