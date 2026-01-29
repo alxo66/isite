@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { OrderManager } from '@/lib/orders'
 import { useRouter } from 'next/navigation'
+import { sendOrderToTelegram } from '@/lib/telegram'
 
 export default function CheckoutPage() {
   const { items, totalPrice, clearCart } = useCart()
@@ -73,6 +74,30 @@ export default function CheckoutPage() {
         paymentMethod: formData.paymentMethod === 'wallet' ? 'Баланс кошелька' : 'Криптовалюта'
       })
 
+      // Отправляем уведомление в Telegram
+try {
+  await sendOrderToTelegram({
+    orderId: order.id,
+    customerName: formData.name,
+    customerPhone: formData.phone,
+    customerEmail: formData.email,
+    items: items.map(item => ({
+      name: item.name,
+      quantity: item.quantity,
+      price: item.price
+    })),
+    total: totalPrice + (
+      formData.deliveryMethod === 'courier' ? 19 : 
+      formData.deliveryMethod === 'pickup' ? 9 : 15
+    ),
+    paymentMethod: formData.paymentMethod === 'wallet' ? 'Баланс кошелька' : 'Криптовалюта',
+    shippingAddress: `${formData.city}, ${formData.address}`,
+    status: 'Новый'
+  })
+} catch (error) {
+  console.error('Не удалось отправить в Telegram:', error)
+}
+      
       // Генерируем крипто-адрес для оплаты
       if (formData.paymentMethod === 'crypto') {
         const wallets = [
