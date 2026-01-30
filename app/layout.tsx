@@ -1,22 +1,37 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import ClientLayout from "./client-layout";
+// app/layout.tsx
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import './globals.css'
+
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
+import { CartProvider } from '@/context/CartContext'
+import TelegramWidget from '@/components/TelegramWidget'
+
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: "iPhone Store",
-  description: "Интернет-магазин техники Apple",
-};
+  title: 'iPhone Store | Официальный магазин iPhone',
+  description: 'Купить iPhone с доставкой. Оплата криптовалютой.',
+}
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
     <html lang="ru">
-      <body className="bg-gray-50 text-gray-900">
-        <ClientLayout>{children}</ClientLayout>
+      <body className={inter.className}>
+        <CartProvider>
+          <div className="min-h-screen flex flex-col">
+            <Header />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+            <TelegramWidget />
+          </div>
+        </CartProvider>
       </body>
     </html>
-  );
+  )
 }
