@@ -3,12 +3,13 @@ import { products } from '@/data/products'
 import { Filter } from 'lucide-react'
 
 export default function CatalogPage() {
-  // Группировка по категориям - исправленный код без spread оператора
+  // Группировка по категориям - исправленный код
   const categorySet = new Set<string>()
   products.forEach(product => categorySet.add(product.category))
   const categories = Array.from(categorySet)
   
   const inStockProducts = products.filter(p => p.inStock)
+  const preOrderProducts = products.filter(p => !p.inStock)
 
   return (
     <div className="py-20">
@@ -74,12 +75,11 @@ export default function CatalogPage() {
         </div>
 
         {/* Предзаказ секция */}
-        <div className="mt-20">
-          <h2 className="text-3xl font-bold mb-8">Предзаказ</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products
-              .filter(p => !p.inStock)
-              .map((product) => (
+        {preOrderProducts.length > 0 && (
+          <div className="mt-20">
+            <h2 className="text-3xl font-bold mb-8">Предзаказ</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {preOrderProducts.map((product) => (
                 <div key={product.id} className="relative opacity-75">
                   <ProductCard 
                     id={product.id}
@@ -95,8 +95,9 @@ export default function CatalogPage() {
                   </div>
                 </div>
               ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   )
