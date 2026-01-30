@@ -259,3 +259,185 @@ export const products: Product[] = [
     inStock: false
   }
 ]
+  {
+    id: 7,
+    name: "iPhone 16е",
+    category: "iPhone",
+    price: 699,
+    description: "Доступный iPhone с отличной камерой",
+    features: [
+      "A15 Bionic chip",
+      "6.1-дюймовый Super Retina XDR",
+      "12MP двойная камера",
+      "Face ID",
+      "Ceramic Shield"
+    ],
+    colors: ["Красный", "Черный", "Синий", "Фиолетовый"],
+    storage: ["64GB", "128GB"],
+    imageColor: "#FF3B30",
+    rating: 4.6,
+    reviews: 321,
+    inStock: true
+  },
+  {
+    id: 8,
+    name: "iPhone 17 Pro",
+    category: "iPhone",
+    price: 1499,
+    description: "Будущее уже здесь - предзаказ",
+    features: [
+      "A19 Pro chip",
+      "Складной дизайн",
+      "Улучшенная термосистема",
+      "Квантовые камеры",
+      "ИИ процессор"
+    ],
+    colors: ["Космический черный", "Лунный свет", "Марсианский красный"],
+    storage: ["256GB", "512GB", "1TB", "2TB"],
+    imageColor: "#FF9500",
+    rating: 4.9,
+    reviews: 89,
+    inStock: false
+  },
+  {
+    id: 9,
+    name: "iPhone 15",
+    category: "iPhone",
+    price: 799,
+    description: "Классический дизайн, современные технологии",
+    features: [
+      "A16 Bionic chip",
+      "Динамический остров",
+      "48MP основная камера",
+      "USB-C",
+      "iOS 17"
+    ],
+    colors: ["Черный", "Синий", "Зеленый", "Розовый", "Желтый"],
+    storage: ["128GB", "256GB"],
+    imageColor: "#34C759",
+    rating: 4.7,
+    reviews: 543,
+    inStock: true
+  },
+  {
+    id: 10,
+    name: "iPhone 15 Pro Max",
+    category: "iPhone",
+    price: 1199,
+    oldPrice: 1299,
+    description: "Флагман с титановым корпусом",
+    features: [
+      "A17 Pro chip",
+      "Титановый корпус",
+      "5x телеобъектив",
+      "Action кнопка",
+      "USB 3"
+    ],
+    colors: ["Титановый черный", "Титановый белый", "Титановый синий"],
+    storage: ["256GB", "512GB", "1TB"],
+    imageColor: "#8E8E93",
+    rating: 4.9,
+    reviews: 432,
+    inStock: true
+  },
+  {
+    id: 11,
+    name: "Apple MacBook Air 13",
+    category: "Mac",
+    price: 1299,
+    description: "Невероятно тонкий и мощный ноутбук",
+    features: [
+      "Чип Apple M5",
+      "13.6-дюймовый Liquid Retina",
+      "До 18 часов работы",
+      "1080p камера FaceTime HD",
+      "MagSafe 3"
+    ],
+    colors: ["Полночь", "Звездный свет", "Космический серый"],
+    storage: ["256GB", "512GB", "1TB"],
+    imageColor: "#A2AAAD",
+    rating: 4.9,
+    reviews: 234,
+    inStock: true
+  },
+  {
+    id: 12,
+    name: "Ipad Air",
+    category: "iPad",
+    price: 799,
+    description: "Мощный. Разносторонний. Невероятно портативный.",
+    features: [
+      "Чип M2",
+      "11-дюймовый Liquid Retina",
+      "Поддержка Apple Pencil",
+      "Magic Keyboard",
+      "5G поддержка"
+    ],
+    colors: ["Синий", "Лиловый", "Звездный свет", "Космический серый"],
+    storage: ["128GB", "256GB"],
+    imageColor: "#BF5AF2",
+    rating: 4.7,
+    reviews: 289,
+    inStock: true
+  },
+  {
+    id: 13,
+    name: "Ipad pro",
+    category: "iPad",
+    price: 1099,
+    description: "Суперкомпьютер для творчества",
+    features: [
+      "Чип M4",
+      "Дисплей Ultra Retina XDR",
+      "Apple Pencil Pro",
+      "Magic Keyboard",
+      "5G поддержка"
+    ],
+    colors: ["Космический черный", "Серебристый"],
+    storage: ["256GB", "512GB", "1TB", "2TB"],
+    imageColor: "#D1D1D6",
+    rating: 4.8,
+    reviews: 156,
+    inStock: true
+  },
+  {
+    id: 14,
+    name: "Mac 14 про м5",
+    category: "Mac",
+    price: 1999,
+    description: "Идеальный компьютер для профессионалов",
+    features: [
+      "Чип Apple M5 Pro/Max",
+      "14.2-дюймовый Liquid Retina XDR",
+      "До 96GB памяти",
+      "До 8TB памяти",
+      "Порты HDMI, SDXC, Thunderbolt 4"
+    ],
+    colors: ["Космический черный", "Серебристый"],
+    storage: ["512GB", "1TB", "2TB", "4TB", "8TB"],
+    imageColor: "#1D1D1F",
+    rating: 4.9,
+    reviews: 134,
+    inStock: true
+  },
+  {
+    id: 15,
+    name: "AirPods Pro 2",
+    category: "Accessories",
+    price: 249,
+    description: "Активное шумоподавление нового уровня",
+    features: [
+      "Активное шумоподавление",
+      "Пространственное аудио",
+      "Адаптивная прозрачность",
+      "Водостойкость",
+      "До 30 часов работы"
+    ],
+    colors: ["Белый"],
+    storage: [],
+    imageColor: "#F5F5F7",
+    rating: 4.8,
+    reviews: 892,
+    inStock: true
+  }
+]
