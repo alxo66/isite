@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { ShoppingCart, Star } from 'lucide-react'
 import { motion } from 'framer-motion'
