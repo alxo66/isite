@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { Wallet, Copy, Check, Plus } from 'lucide-react'
 import { useState, useEffect } from 'react'
