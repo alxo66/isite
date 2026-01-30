@@ -3,9 +3,7 @@
 import { ShoppingCart, User, Search, Menu, X } from 'lucide-react'
 import { useState } from 'react'
 import Link from 'next/link'
-import CartModal from '@/components/CartModal'
 import { useCart } from '@/context/CartContext'
-import SearchModal from '@/components/SearchModal'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -83,13 +81,7 @@ export default function Header() {
         </div>
       </header>
 
-      {/* Модальное окно корзины */}
-      <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
-      
-      {/* Модальное окно поиска */}
-      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-      
-      {/* Скрытая кнопка для админки */}
+      {/* Скрытая кнопка для админки - УДАЛЕНА router */}
       <button
         onClick={() => window.location.href = '/admin'}
         className="fixed bottom-4 right-4 w-12 h-12 bg-apple-blue text-white rounded-full shadow-lg z-40 flex items-center justify-center hover:bg-blue-600 transition"
