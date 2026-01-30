@@ -3,17 +3,6 @@
 import Link from "next/link";
 import { ShoppingCart, Search } from "lucide-react";
 
-export default function Header() {
-  return (
-    <header className="sticky top-0 z-50 border-b bg-white">
-      <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-4">
-        {/* Logo */}
-        <Link
-          href="/"
-          className="text-lg font-bold tracking-tight hover:opacity-80"
-        >
-          iPhone Store
-        </Link>
 
         {/* Navigation */}
         <nav className="hidden gap-8 md:flex">
