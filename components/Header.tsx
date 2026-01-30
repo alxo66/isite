@@ -1,53 +1,39 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { ShoppingCart, Search } from "lucide-react";
+import Link from "next/link"
+import { ShoppingCart, Search } from "lucide-react"
 
+export default function Header() {
+  return (
+    <header className="sticky top-0 z-50 bg-white border-b">
+      <div className="mx-auto max-w-[1400px] px-4 h-16 flex items-center justify-between">
+
+        {/* Logo */}
+        <Link href="/" className="text-xl font-semibold">
+          iPhone Store
+        </Link>
 
         {/* Navigation */}
-        <nav className="hidden gap-8 md:flex">
-          <Link
-            href="/catalog"
-            className="text-sm font-medium text-gray-700 hover:text-black"
-          >
-            Каталог
-          </Link>
-          <Link
-            href="/delivery"
-            className="text-sm font-medium text-gray-700 hover:text-black"
-          >
-            Доставка
-          </Link>
-          <Link
-            href="/contacts"
-            className="text-sm font-medium text-gray-700 hover:text-black"
-          >
-            Контакты
-          </Link>
+        <nav className="hidden md:flex items-center gap-8 text-sm">
+          <Link href="/catalog" className="hover:text-blue-600">Каталог</Link>
+          <Link href="/delivery" className="hover:text-blue-600">Доставка</Link>
+          <Link href="/contacts" className="hover:text-blue-600">Контакты</Link>
         </nav>
 
         {/* Actions */}
         <div className="flex items-center gap-4">
-          <button
-            className="rounded-full p-2 text-gray-600 hover:bg-gray-100 hover:text-black"
-            aria-label="Поиск"
-          >
+          <button className="p-2 hover:bg-gray-100 rounded-full">
             <Search size={20} />
           </button>
-
-          <Link
-            href="/cart"
-            className="relative rounded-full p-2 text-gray-600 hover:bg-gray-100 hover:text-black"
-          >
+          <button className="relative p-2 hover:bg-gray-100 rounded-full">
             <ShoppingCart size={20} />
-
-            {/* Counter (пока статический) */}
-            <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600 text-[10px] font-semibold text-white">
+            <span className="absolute -top-1 -right-1 text-xs bg-blue-600 text-white rounded-full w-4 h-4 flex items-center justify-center">
               1
             </span>
-          </Link>
+          </button>
         </div>
+
       </div>
     </header>
-  );
+  )
 }
