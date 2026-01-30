@@ -5,11 +5,7 @@ import Footer from '@/components/Footer'
 import { CartProvider } from '@/context/CartContext'
 import TelegramWidget from '@/components/TelegramWidget'
 
-export default function ClientLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function ClientLayout({ children }: { children: React.ReactNode }) {
   return (
     <CartProvider>
       <div className="min-h-screen flex flex-col">
