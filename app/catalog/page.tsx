@@ -3,8 +3,8 @@ import { products } from '@/data/products'
 import { Filter } from 'lucide-react'
 
 export default function CatalogPage() {
-  // Группировка по категориям
-  const categories = [...new Set(products.map(p => p.category))]
+  // Группировка по категориям - исправленная версия
+  const categories = Array.from(new Set(products.map(p => p.category)))
   const inStockProducts = products.filter(p => p.inStock)
 
   return (
