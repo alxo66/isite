@@ -1,10 +1,113 @@
 import ProductCard from '@/components/ProductCard'
-import { products } from '@/data/products'
 import { Filter } from 'lucide-react'
 
+// Временные данные товаров (прямо в файле)
+const products = [
+  {
+    id: 1,
+    name: "iPhone 16 Pro Max",
+    category: "iPhone",
+    price: 1399,
+    oldPrice: 1499,
+    description: "Самый мощный iPhone с технологией Apple Intelligence",
+    imageColor: "#1D1D1F",
+    rating: 4.9,
+    reviews: 342,
+    inStock: true
+  },
+  {
+    id: 2,
+    name: "iPhone 16 Pro",
+    category: "iPhone",
+    price: 1199,
+    description: "Профессиональная камера в компактном корпусе",
+    imageColor: "#007AFF",
+    rating: 4.8,
+    reviews: 256,
+    inStock: true
+  },
+  {
+    id: 3,
+    name: "iPhone 16 Plus",
+    category: "iPhone",
+    price: 999,
+    description: "Большой дисплей и долгий срок работы батареи",
+    imageColor: "#FF2D55",
+    rating: 4.7,
+    reviews: 189,
+    inStock: true
+  },
+  {
+    id: 4,
+    name: "iPhone 16",
+    category: "iPhone",
+    price: 899,
+    description: "Сбалансированный iPhone для большинства пользователей",
+    imageColor: "#32D74B",
+    rating: 4.7,
+    reviews: 412,
+    inStock: true
+  },
+  {
+    id: 5,
+    name: "iPhone 15 Pro Max",
+    category: "iPhone",
+    price: 1099,
+    oldPrice: 1299,
+    description: "Титановый дизайн и кнопка действия",
+    imageColor: "#5E5E5E",
+    rating: 4.8,
+    reviews: 567,
+    inStock: true
+  },
+  {
+    id: 6,
+    name: "Apple MacBook Air 13 M5",
+    category: "Mac",
+    price: 1299,
+    description: "Невероятно тонкий и мощный ноутбук",
+    imageColor: "#A2AAAD",
+    rating: 4.9,
+    reviews: 234,
+    inStock: true
+  },
+  {
+    id: 7,
+    name: "iPad Pro M4",
+    category: "iPad",
+    price: 1099,
+    description: "Суперкомпьютер для творчества",
+    imageColor: "#D1D1D6",
+    rating: 4.8,
+    reviews: 156,
+    inStock: true
+  },
+  {
+    id: 8,
+    name: "iPad Air",
+    category: "iPad",
+    price: 799,
+    description: "Мощный. Разносторонний. Невероятно портативный.",
+    imageColor: "#BF5AF2",
+    rating: 4.7,
+    reviews: 289,
+    inStock: true
+  }
+]
+
 export default function CatalogPage() {
-  // Группировка по категориям - исправленная версия
-  const categories = Array.from(new Set(products.map(p => p.category)))
+  // Используем простой способ получения уникальных категорий
+  const categories = [] as string[];
+  const categorySet = new Set<string>();
+  
+  products.forEach(product => {
+    categorySet.add(product.category);
+  });
+  
+  categorySet.forEach(category => {
+    categories.push(category);
+  });
+  
   const inStockProducts = products.filter(p => p.inStock)
 
   return (
@@ -68,31 +171,6 @@ export default function CatalogPage() {
               description={product.description}
             />
           ))}
-        </div>
-
-        {/* Предзаказ секция */}
-        <div className="mt-20">
-          <h2 className="text-3xl font-bold mb-8">Предзаказ</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products
-              .filter(p => !p.inStock)
-              .map((product) => (
-                <div key={product.id} className="relative opacity-75">
-                  <ProductCard 
-                    id={product.id}
-                    name={product.name}
-                    price={product.price}
-                    imageColor={product.imageColor}
-                    rating={product.rating}
-                    reviews={product.reviews}
-                    description={product.description}
-                  />
-                  <div className="absolute top-4 left-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                    Предзаказ
-                  </div>
-                </div>
-              ))}
-          </div>
         </div>
       </div>
     </div>
