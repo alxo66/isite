@@ -1,41 +1,43 @@
-import { products } from '@/data/products'
+import ProductCard from '@/components/ProductCard'
+import { products } from '@/app/data/products'
 
 export default function HomePage() {
   return (
-    <main className="container mx-auto px-4">
-      <h2 className="text-3xl font-bold text-center my-12">
-        Популярные модели
-      </h2>
+    <div className="container mx-auto px-4">
+      {/* HERO */}
+      <section className="py-20 text-center">
+        <h1 className="text-4xl font-bold mb-4">
+          Купите новый iPhone за криптовалюту
+        </h1>
+        <p className="text-gray-600 max-w-2xl mx-auto mb-8">
+          Bitcoin, Ethereum, USDT. Без банков и посредников.
+        </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        {products.map(product => (
-          <div
-            key={product.id}
-            className="rounded-2xl shadow-lg bg-white overflow-hidden"
+        <div className="flex justify-center gap-4">
+          <a
+            href="/catalog"
+            className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition"
           >
-            <div className="h-48 bg-gradient-to-br from-gray-900 to-gray-700" />
+            Перейти в каталог
+          </a>
+          <button className="border px-6 py-3 rounded-xl">
+            Как купить
+          </button>
+        </div>
+      </section>
 
-            <div className="p-4">
-              <h3 className="font-semibold text-lg">{product.title}</h3>
+      {/* POPULAR */}
+      <section className="py-16">
+        <h2 className="text-2xl font-bold mb-8 text-center">
+          Популярные модели
+        </h2>
 
-              <div className="text-yellow-400 text-sm mt-1">
-                {'★'.repeat(Math.round(product.rating))}
-                <span className="text-gray-500 ml-2">
-                  ({product.reviews} отзывов)
-                </span>
-              </div>
-
-              <div className="text-2xl font-bold mt-3">
-                ${product.price}
-              </div>
-
-              <button className="mt-4 w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition">
-                🛒 В корзину
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </main>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {products.slice(0, 4).map(product => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      </section>
+    </div>
   )
 }
