@@ -1,18 +1,17 @@
-// app/layout.tsx
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { CartProvider } from '@/context/CartContext'
 import TelegramWidget from '@/components/TelegramWidget'
+import { CartProvider } from '@/context/CartContext'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'iPhone Store | Официальный магазин iPhone',
-  description: 'Купить iPhone с доставкой. Оплата криптовалютой.',
+  title: 'iPhone Store',
+  description: 'Покупка iPhone за криптовалюту',
 }
 
 export default function RootLayout({
